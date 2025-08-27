@@ -1,0 +1,19 @@
+[project]
+name = "smsaback"
+version = "0.1.0"
+description = "Middleware para gerenciamento de logs e Endpoints"
+authors = [
+    {name = "Pedro Pereira", email = "consultor.pedropereira@t10.digital"},
+]
+dependencies = []
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
