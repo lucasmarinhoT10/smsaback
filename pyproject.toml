@@ -5,7 +5,12 @@ description = "Middleware para gerenciamento de logs e Endpoints"
 authors = [
     {name = "Pedro Pereira", email = "consultor.pedropereira@t10.digital"},
 ]
-dependencies = []
+dependencies = [
+  "psycopg2-binary",
+  "pymongo",
+  "python-json-logger",
+  "python-dotenv"
+]
 requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
@@ -14,6 +19,21 @@ license = {text = "MIT"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --cov=src --cov-report=term-missing"
+testpaths = [
+  "tests"
+]
+pythonpath = [
+  "src"
+]
+
+[tool.pdm.dev-dependencies]
+test = [
+  "pytest",
+  "pytest-cov"
+]
 
 [tool.pdm]
 distribution = true
