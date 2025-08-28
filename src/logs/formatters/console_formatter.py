@@ -14,6 +14,15 @@ COLORS = {
 }
 
 class ConsoleFormatter(logging.Formatter):
+    """
+    ConsoleFormatter é uma classe personalizada que herda de logging.Formatter e tem como objetivo formatar as mensagens de log exibidas no console de forma mais legível e colorida.
+
+    Ela utiliza códigos de cores ANSI para destacar diferentes partes do log, como o timestamp, o nível do log (INFO, WARNING, ERROR, etc.), o local do código onde o log foi gerado (nome do logger, função e linha), além da própria mensagem.
+
+    O método principal é o `format`, que monta a string final do log, aplicando as cores e o layout desejado. Caso a mensagem contenha múltiplas linhas, cada linha é formatada separadamente para manter a legibilidade. Se houver exceção associada ao log, ela também é formatada e destacada.
+
+    Essa formatação facilita a identificação rápida de informações importantes no terminal, tornando o processo de depuração e monitoramento mais eficiente.
+    """
     def format(self, record):
         level = record.levelname
 

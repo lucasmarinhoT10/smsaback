@@ -4,7 +4,27 @@ import psycopg2
 from datetime import datetime
 
 class PostgresHandler(logging.Handler):
+    """
+    PostgresHandler é uma classe personalizada que herda de logging.Handler e permite registrar logs diretamente em uma tabela do PostgreSQL.
+
+    - No construtor (__init__), recebe a string de conexão (dsn), o nome do banco de dados (database) e o nome da tabela (table) onde os logs serão armazenados.
+    - Garante que o banco de dados e a tabela existam, criando-os se necessário.
+    - Mantém uma conexão persistente com o banco de dados para inserção dos logs.
+
+    Métodos:
+    - _ensure_database: Verifica se o banco de dados de destino existe; caso não exista, cria o banco.
+    - _ensure_table: Garante que a tabela de logs exista no banco, criando-a se necessário.
+    - emit: Método chamado automaticamente pelo sistema de logging do Python para cada registro de log. Formata o registro, converte para dicionário e insere na tabela do PostgreSQL.
+    """
+
     def __init__(self, dsn: str, database: str, table: str = "logs"):
+        """
+        Inicializa o handler, garantindo a existência do banco e da tabela.
+        Parâmetros:
+            dsn (str): String de conexão base para o PostgreSQL.
+            database (str): Nome do banco de dados onde os logs serão armazenados.
+            table (str): Nome da tabela de logs (padrão: "logs").
+        """
         super().__init__()
         self.dsn = dsn
         self.database = database
@@ -15,7 +35,10 @@ class PostgresHandler(logging.Handler):
         self._ensure_table()
 
     def _ensure_database(self):
-        # Conecta ao banco 'postgres' para verificar/criar o banco de destino
+        """
+        Garante que o banco de dados de destino exista.
+        Conecta-se ao banco 'postgres' padrão, verifica se o banco desejado existe e, se não existir, cria o banco.
+        """
         conn = psycopg2.connect(self.dsn, database='postgres')
         conn.autocommit = True  # Necessário para CREATE DATABASE fora de transação
         cursor = conn.cursor()
@@ -29,6 +52,10 @@ class PostgresHandler(logging.Handler):
         conn.close()
 
     def _ensure_table(self):
+        """
+        Garante que a tabela de logs exista no banco de dados.
+        Cria a tabela caso ela ainda não exista, com colunas para timestamp, nível, nome, usuário, ação, mensagem e dados extras em JSON.
+        """
         self.cursor.execute(f"""
             CREATE TABLE IF NOT EXISTS {self.table} (
                 id SERIAL PRIMARY KEY,
@@ -44,6 +71,11 @@ class PostgresHandler(logging.Handler):
         self.conn.commit()
 
     def emit(self, record):
+        """
+        Insere um registro de log na tabela do PostgreSQL.
+        Formata o registro de log, converte para dicionário e insere os campos na tabela.
+        Em caso de erro, imprime uma mensagem de erro no console.
+        """
         try:
             log_entry = self.format(record)
             log_data = json.loads(log_entry)
