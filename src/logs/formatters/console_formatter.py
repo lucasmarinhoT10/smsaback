@@ -31,7 +31,6 @@ class ConsoleFormatter(logging.Formatter):
 
         timestamp_str = f"{COLORS['timestamp']}{timestamp}{COLORS['RESET']}"
 
-        # record_section = f"{COLORS['record_section']}{record.funcName}:adicionarTypeActionAqui:(line:{record.lineno}){COLORS['RESET']}"
         record_section = (
             f"{COLORS['record_section']}"
             f"{record.name}.{record.funcName}:{record.lineno}"

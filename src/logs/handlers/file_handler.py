@@ -22,12 +22,10 @@ class FileWriteHandler(RotatingFileHandler):
         backupCount (int): Quantidade de arquivos de backup a manter.
     """
     def __init__(self, base_path, file_type, maxBytes=5_000_000, backupCount=3):
-        # Garante que o diretório existe, se não existir, cria
         dir_path = os.path.dirname(base_path)
         if dir_path and not os.path.exists(dir_path):
             os.makedirs(dir_path, exist_ok=True)
 
-        # Usa base_path apenas como caminho, nome do arquivo será dinâmico
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         file_path = os.path.join(
             dir_path,
@@ -36,7 +34,6 @@ class FileWriteHandler(RotatingFileHandler):
 
         super().__init__(file_path, maxBytes=maxBytes, backupCount=backupCount, encoding="utf-8")
 
-        # Formatter corrigido
         self.json_formatter = FileJsonFormatter()
         self.setFormatter(self.json_formatter)
 
@@ -47,7 +44,6 @@ class FileWriteHandler(RotatingFileHandler):
         utilizando o formatter customizado para formatar o tempo no padrão ISO.
         Em seguida, chama o método emit da superclasse para realizar a escrita.
         """
-        # garante que asctime esteja sempre preenchido
         if not hasattr(record, "asctime"):
             record.asctime = self.json_formatter.formatTime(record, "%Y-%m-%dT%H:%M:%S")
         super().emit(record)

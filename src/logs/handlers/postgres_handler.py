@@ -40,10 +40,8 @@ class PostgresHandler(logging.Handler):
         Conecta-se ao banco 'postgres' padrão, verifica se o banco desejado existe e, se não existir, cria o banco.
         """
         conn = psycopg2.connect(self.dsn, database='postgres')
-        conn.autocommit = True  # Necessário para CREATE DATABASE fora de transação
+        conn.autocommit = True
         cursor = conn.cursor()
-        # O PostgreSQL não suporta "CREATE DATABASE IF NOT EXISTS" diretamente.
-        # Portanto, precisamos checar se o banco existe antes de criar.
         cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s", (self.database,))
         exists = cursor.fetchone()
         if not exists:
