@@ -1,7 +1,9 @@
-import logging
 import json
-import psycopg2
+import logging
 from datetime import datetime
+
+import psycopg2
+
 
 class PostgresHandler(logging.Handler):
     """
@@ -39,7 +41,7 @@ class PostgresHandler(logging.Handler):
         Garante que o banco de dados de destino exista.
         Conecta-se ao banco 'postgres' padrão, verifica se o banco desejado existe e, se não existir, cria o banco.
         """
-        conn = psycopg2.connect(self.dsn, database='postgres')
+        conn = psycopg2.connect(self.dsn, database="postgres")
         conn.autocommit = True
         cursor = conn.cursor()
         cursor.execute("SELECT 1 FROM pg_database WHERE datname = %s", (self.database,))
@@ -54,7 +56,8 @@ class PostgresHandler(logging.Handler):
         Garante que a tabela de logs exista no banco de dados.
         Cria a tabela caso ela ainda não exista, com colunas para timestamp, nível, nome, usuário, ação, mensagem e dados extras em JSON.
         """
-        self.cursor.execute(f"""
+        self.cursor.execute(
+            f"""
             CREATE TABLE IF NOT EXISTS {self.table} (
                 id SERIAL PRIMARY KEY,
                 timestamp TIMESTAMP,
@@ -65,7 +68,8 @@ class PostgresHandler(logging.Handler):
                 message TEXT,
                 extra JSONB
             );
-        """)
+        """
+        )
         self.conn.commit()
 
     def emit(self, record):
@@ -78,18 +82,21 @@ class PostgresHandler(logging.Handler):
             log_entry = self.format(record)
             log_data = json.loads(log_entry)
 
-            self.cursor.execute(f"""
+            self.cursor.execute(
+                f"""
                 INSERT INTO {self.table} (timestamp, level, name, user_id, action, message, extra)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (
-                datetime.fromisoformat(log_data["timestamp"]),
-                log_data["level"],
-                log_data["name"],
-                log_data.get("user_id"),
-                log_data.get("action"),
-                log_data["message"],
-                json.dumps(log_data.get("extra", {}))
-            ))
+            """,
+                (
+                    datetime.fromisoformat(log_data["timestamp"]),
+                    log_data["level"],
+                    log_data["name"],
+                    log_data.get("user_id"),
+                    log_data.get("action"),
+                    log_data["message"],
+                    json.dumps(log_data.get("extra", {})),
+                ),
+            )
             self.conn.commit()
         except Exception as e:
             print(f"[PostgresHandler ERROR] {e}")

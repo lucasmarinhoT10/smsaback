@@ -19,21 +19,46 @@ license = {text = "MIT"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q --cov=src --cov-report=term-missing"
-testpaths = [
-  "tests"
-]
-pythonpath = [
-  "src"
-]
-
-[tool.pdm.dev-dependencies]
-test = [
-  "pytest",
-  "pytest-cov"
-]
-
 [tool.pdm]
 distribution = true
+
+[dependency-groups]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "pytest-xdist",
+  "black",
+  "ruff",
+  "pre-commit",
+  "mkdocs",
+  "mkdocs-material",
+  "bandit",
+  "safety"
+]
+
+# -------------------
+# Configurações do Black
+# -------------------
+[tool.black]
+line-length = 88
+target-version = ['py39']
+
+# -------------------
+# Configurações do Ruff (Lint)
+# -------------------
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I", "B"]  # PEP8, erros comuns, imports, boas práticas
+ignore = ["E501"]  # ignorar linha muito longa (Black já formata)
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --cov=src --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+# -------------------
+# Configuração do Bandit (segurança)
+# -------------------
+[tool.bandit]
+skips = ["B101"]  # exemplo: ignora "assert usado"

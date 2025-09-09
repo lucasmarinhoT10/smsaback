@@ -1,6 +1,8 @@
-import logging
 import json
+import logging
+
 from pymongo import MongoClient
+
 
 class MongoHandler(logging.Handler):
     """
@@ -14,6 +16,7 @@ class MongoHandler(logging.Handler):
     - O emit recebe um objeto record (registro de log), formata esse registro usando o formatter associado ao handler (transformando-o em string JSON), converte para dicionário Python e insere o documento na coleção do MongoDB.
     - Caso ocorra qualquer exceção durante o processo, imprime uma mensagem de erro no console.
     """
+
     def __init__(self, uri: str, db: str = "logsdb", collection: str = "logs"):
         super().__init__()
         self.client = MongoClient(uri)

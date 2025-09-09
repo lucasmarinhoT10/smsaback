@@ -1,5 +1,6 @@
 from pythonjsonlogger import jsonlogger
 
+
 class FileJsonFormatter(jsonlogger.JsonFormatter):
     """
     FileJsonFormatter é uma classe personalizada que herda de JsonFormatter da biblioteca pythonjsonlogger.

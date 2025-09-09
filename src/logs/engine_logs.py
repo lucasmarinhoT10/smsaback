@@ -1,14 +1,13 @@
 import logging
 import os
-from pythonjsonlogger import json
-from dotenv import load_dotenv
 
-from logs.handlers.postgres_handler import PostgresHandler
-from logs.handlers.mongo_handler import MongoHandler
-from logs.handlers.file_handler import FileWriteHandler
+from dotenv import load_dotenv
 from logs.formatters.console_formatter import ConsoleFormatter
+from logs.handlers.file_handler import FileWriteHandler
+from pythonjsonlogger import json
 
 load_dotenv()
+
 
 class InfoOnlyConsoleFilter(logging.Filter):
     def filter(self, record):
@@ -16,6 +15,7 @@ class InfoOnlyConsoleFilter(logging.Filter):
         if log_level == "INFO" and record.levelname != "INFO":
             return False
         return True
+
 
 class EngineLogs:
     """
@@ -37,6 +37,7 @@ class EngineLogs:
 
     As variáveis de ambiente controlam os destinos e o nível dos logs, conforme detalhado no README.
     """
+
     def __init__(self):
         env = os.getenv("ENVIRONMENT", "default")
         level = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -46,7 +47,7 @@ class EngineLogs:
 
         formatter = json.JsonFormatter(
             fmt="Log Level [%(level)s] | %(timestamp)s - %(name)s %(message)s %(user_id)s %(action)s %(extra)s",
-            rename_fields={"levelname": "level", "asctime": "timestamp"}
+            rename_fields={"levelname": "level", "asctime": "timestamp"},
         )
 
         # Console
@@ -60,7 +61,9 @@ class EngineLogs:
         # Arquivo local
         if os.getenv("LOG_FILE", "false").lower() == "true":
             file_path = os.getenv("LOG_FILE_PATH", "")
-            file_handler = FileWriteHandler(file_path, 'log', maxBytes=5_000_000, backupCount=3)
+            file_handler = FileWriteHandler(
+                file_path, "log", maxBytes=5_000_000, backupCount=3
+            )
             self.logger.addHandler(file_handler)
 
         # # Postgres

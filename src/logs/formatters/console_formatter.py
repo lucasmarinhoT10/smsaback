@@ -1,17 +1,17 @@
 import logging
-import os
 from datetime import datetime
 
 COLORS = {
     "timestamp": "\033[38;5;40m",  # verde escuro para o timestamp
     "record_section": "\033[38;5;37m",  # turquesa
-    "DEBUG": "\033[38;5;27m",      # azul/ciano
-    "INFO": "\033[37m",       # branco
-    "WARNING": "\033[33m",    # amarelo
-    "ERROR": "\033[31m",      # vermelho
-    "CRITICAL": "\033[1;31m", # vermelho forte
-    "RESET": "\033[0m" # reset
+    "DEBUG": "\033[38;5;27m",  # azul/ciano
+    "INFO": "\033[37m",  # branco
+    "WARNING": "\033[33m",  # amarelo
+    "ERROR": "\033[31m",  # vermelho
+    "CRITICAL": "\033[1;31m",  # vermelho forte
+    "RESET": "\033[0m",  # reset
 }
+
 
 class ConsoleFormatter(logging.Formatter):
     """
@@ -23,6 +23,7 @@ class ConsoleFormatter(logging.Formatter):
 
     Essa formatação facilita a identificação rápida de informações importantes no terminal, tornando o processo de depuração e monitoramento mais eficiente.
     """
+
     def format(self, record):
         level = record.levelname
 
@@ -36,7 +37,9 @@ class ConsoleFormatter(logging.Formatter):
             f"{record.name}.{record.funcName}:{record.lineno}"
             f"{COLORS['RESET']}"
         )
-        header = f"{timestamp_str} | {color}{level:<8}{COLORS['RESET']} | {record_section} -"
+        header = (
+            f"{timestamp_str} | {color}{level:<8}{COLORS['RESET']} | {record_section} -"
+        )
 
         message = record.getMessage()
 

@@ -1,0 +1,38 @@
+# repos:
+#   # Black (formatador)
+#   - repo: https://github.com/psf/black
+#     rev: 24.2.0
+#     hooks:
+#       - id: black
+
+#   # Ruff (lint)
+#   - repo: https://github.com/astral-sh/ruff-pre-commit
+#     rev: v0.2.2
+#     hooks:
+#       - id: ruff
+#         args: ["--fix"]
+
+#   # Pytest com cobertura mínima
+#   - repo: local
+#     hooks:
+#       - id: pytest-cov
+#         name: Run pytest with coverage
+#         entry: pdm run pytest
+#         language: system
+#         pass_filenames: false
+
+#   # Bandit (segurança)
+#   - repo: https://github.com/PyCQA/bandit
+#     rev: 1.7.8
+#     hooks:
+#       - id: bandit
+#         args: ["-r", "src"]
+
+#   # Safety (checagem de dependências vulneráveis)
+#   - repo: local
+#     hooks:
+#       - id: safety
+#         name: Check dependencies for vulnerabilities
+#         entry: pdm run safety check --full-report
+#         language: system
+#         pass_filenames: false
